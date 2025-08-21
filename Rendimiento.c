@@ -39,7 +39,12 @@
 /*Se declaran los punteros para las matrices, 3 punteros de tipo double*/
 double *mA, *mB, *mC;
 
-/*Funcion para asignarle valores fijos a 3 matrices de largo-ancho N*/
+/*
+Nombre: initMatrices
+Descripcion: Funcion para asignarle valores fijos a 3 matrices de largo-ancho N
+Entradas: Recibe el tamaño de la matrices y los apuntadores a las 3 matrices de tipo double
+Salidas: no retorna nada pero se encarga de ingresar valores en las 3 matrices 
+*/
 void initMatrices(int N, double *matriz1, double *matriz2, double *matriz3){
 	for(int i = 0;i<N*N;i++){
 		matriz1[i] = i*5 +1;
@@ -49,7 +54,13 @@ void initMatrices(int N, double *matriz1, double *matriz2, double *matriz3){
 }
 
 
-/*Función para imprimir una matriz si su largo-ancho es menor a 9, en caso contrario avisa que el tamaño es demasiado*/
+/*
+Nombre: imprMatriz
+Descripción: Función para imprimir una matriz si su largo-ancho es menor a 9, en caso contrario avisa que el tamaño es demasiado
+Entradas: Recibe el tamaño de la matriz y un apuntador a una matriz de double
+Salidas: no retorna nada pero imprime la matriz por consola
+Importante: Si el tamaño de la matriz es mayor o igual a 9 la matriz no se imprime
+*/
 void imprMatriz(int N, double *matriz){
     if(N<9){
 	for(int i=0; i<N*N; i++){
@@ -63,29 +74,48 @@ void imprMatriz(int N, double *matriz){
     }
 };
 
+
+/*
+Nombre: main
+Descripción: contiene el codigo principal
+Importante: comentarios dentro de la funcion
+*/
 int main(int argc, char *argv[]) {
+    // Condicional para confirmar la cantidad de entradas e informar el formato para correr el ejecutable
     if(argc<2){
         printf("Numero argumentos incorrectos\n");
         printf("\n\t $ejecutable.exe DIM \n");
         return -1;
     }
 
+    // Transformación del valor de consola a float con funcion ASCII to float (atof)
     int N = (int) atof(argv[1]);
+
+    // Condicional para confirmar que el tamaño ingresado por consola es positivo y diferente de cero
     if(N<=0){
         printf("\n Valores deben ser mayor que cero\n");
         return -1;
     };
 
+    // Asignación de memoria de todas las matrices dinamicas teniendo en cuenta:
+    // (double *) --> cast para definir que el retorno es un apuntador a double ya que malloc regresa un void
+    // malloc - calloc --> Funcion para asignar memoria dinamica
+    // Diferencia entre malloc y calloc: calloc a diferencia de malloc asigna la memoria y establece los valores en 0
+    // N*N*sizeof(double) --> multiplicación por el tamaño del tipo de dato
     mA = (double *) malloc(N*N*sizeof(double));
     mB = (double *) malloc(N*N*sizeof(double));
     mC = (double *) calloc(N*N,sizeof(double));	
 
+    //Uso de funcion para llenar las matrices
    initMatrices(N,mA,mB,mC);
+
+   // Uso de funcion para imprimir las 3 matrices
    imprMatriz(N,mA);
    imprMatriz(N,mB);
    imprMatriz(N,mC);
 
-        for(int i=0; i<N; i++){
+    // Ciclos anidados para realizar la multiplicación de matrices y guardarlos en otra
+    for(int i=0; i<N; i++){
         for(int j=0; j<N; j++){
             double sumaTemp, *pA, *pB;
             sumaTemp = 0.0;
@@ -98,13 +128,17 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // impresion de matriz 3 para confirmar la multiplicación de matrices
+    imprMatriz(N, mC);
 
-        printf("\n\tFin del programa.............!\n");
 
+    printf("\n\tFin del programa.............!\n");
+
+    // Liberacion de la memoria asignada para las 3 matrices
 	free(mA);
 	free(mB);
 	free(mC);
 
-        return 0;
+    return 0;
 
 }
